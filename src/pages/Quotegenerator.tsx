@@ -1,13 +1,20 @@
-import React, { useState, useMemo, lazy, Suspense } from "react";
-import { IconButton, useMediaQuery, useTheme } from "@mui/material";
+import React, { useState, useMemo, lazy, Suspense, useEffect } from "react";
+import {
+  Autocomplete,
+  IconButton,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import Comma from "../assets/svgs/Comma";
-import { quotes } from "../algos";
 import Loader from "../components/Loader";
-import { fetchQuotes } from "../api/quotes";
+import axios from "axios";
+import { categories, truncate } from "../algos";
 
 type Quote = {
   quote: string;
   author: string;
+  category?: string;
 };
 
 const generateSweetLightColors = () => {
@@ -36,14 +43,15 @@ const LazyArrowCircleRightIcon = lazy(
 );
 
 const Quotegenerator: React.FC = () => {
-  const [quoteIdx, setQuoteIdx] = useState<number>(0);
+  const [quotes, setQuotes] = useState<Quote[]>([] as Quote[]);
+  const [fullQuote, setFullQuote] = useState<boolean>(false); // <--- TODO: Implement this feature
+  const [quoteIdx, setQuoteIdx] = useState<number>(-1);
+  const [category, setCategory] = useState<string>("inspirational");
+  const [fetching, setFetching] = useState<boolean>(false);
+  const [trigger, setTrigger] = useState<boolean>(false);
   const [color, setColor] = useState<string>(colors[0]);
   const { palette } = useTheme();
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
-  const { isLoading, error, data } = fetchQuotes("inspirational");
-
-  if (!isLoading) console.log(data);
-  // const { data, isLoading, error } = useGetQuotesQuery("motivational");
 
   const setRandomColor = () => {
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
@@ -51,96 +59,175 @@ const Quotegenerator: React.FC = () => {
   };
 
   const handleNext = () => {
-    setQuoteIdx((prev) => (prev + 1) % quotes.length);
+    if (quoteIdx + 1 >= quotes.length) setTrigger((prev) => !prev);
+    else setQuoteIdx((prev) => prev + 1);
     setRandomColor();
   };
 
   const handlePrevious = () => {
+    if (quoteIdx - 1 < 0) return;
     setQuoteIdx((prev) => (prev - 1 + quotes.length) % quotes.length);
     setRandomColor();
   };
 
-  const currentQuote: Quote = quotes[quoteIdx];
+  useEffect(() => {
+    setFetching(true);
+    axios
+      .get(`${process.env.REACT_APP_NINJA_URL}quotes?category=${category}`, {
+        headers: {
+          "X-Api-Key": process.env.REACT_APP_NINJA_API_KEY,
+        },
+      })
+      .then((response) => {
+        setQuoteIdx((prev) => prev + 1);
+        setQuotes((prev) => [...prev, response.data[0]]);
+        console.log(quotes);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error("Error:", error.response.status, error.response.data);
+        } else {
+          console.error("Request failed:", error.message);
+        }
+      })
+      .finally(() => {
+        setFetching(false);
+      });
+  }, [trigger]);
+
+  useEffect(() => {
+    setQuoteIdx(-1);
+    setQuotes([]);
+    setTrigger((prev) => !prev);
+  }, [category]);
+
+  if (fetching) return <Loader />;
 
   return (
     <div
       style={{
         display: "flex",
         backgroundColor: color,
-        height: "93.7%",
+        height: "93vh",
         width: "100%",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          paddingBottom: "20px",
-          width: "100vw",
-          height: "90%",
-          backgroundColor: palette.common.white,
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-evenly",
-        }}
-      >
+      {quotes.length > 0 && (
         <div
           style={{
             display: "flex",
+            paddingBottom: "20px",
+            width: "100vw",
+            height: "90%",
+            backgroundColor: palette.common.white,
             flexDirection: "column",
-            alignItems: "start",
-            justifyContent: "center",
+            alignItems: "center",
+            justifyContent: "flex-start",
           }}
         >
-          <Comma size={isNonMobileScreens ? 60 : 40} />
-          <p
-            style={{
-              color: palette.primary.dark,
-              fontSize: isNonMobileScreens ? "36px" : "24px",
-              fontWeight: 500,
-              width: isNonMobileScreens ? "50vw" : "90vw",
+          <Autocomplete
+            freeSolo
+            id="combo-box-demo"
+            options={categories}
+            onChange={(event, value) => value && setCategory(value)}
+            sx={{
+              width: 300,
+              marginTop: "20px",
+              marginBottom: "20px",
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: color, // Change label color on focus
+              },
+              "& .MuiOutlinedInput-root fieldset": {
+                borderColor: "grey", // Set the initial border color
+              },
+              "& .MuiOutlinedInput-root:hover fieldset": {
+                borderColor: color, // Change border color on hover
+              },
+              "& .MuiOutlinedInput-root:focus-within fieldset": {
+                borderColor: color, // Change border color on focus
+              },
             }}
-          >
-            {currentQuote.quote}
-          </p>
-          <p
-            style={{
-              fontSize: isNonMobileScreens ? "24px" : "16px",
-              fontWeight: 500,
-            }}
-          >
-            <span>-{currentQuote.author}</span>
-          </p>
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={category[0].toUpperCase() + category.slice(1)}
+              />
+            )}
+          />
           <div
             style={{
               display: "flex",
-              justifyContent: "space-between",
+              flexDirection: "column",
+              alignItems: "start",
+              justifyContent: "center",
             }}
           >
-            <IconButton onClick={handlePrevious}>
-              <Suspense fallback={<Loader />}>
-                <LazyArrowCircleLeftIcon
-                  sx={{
-                    fontSize: "50px",
-                    color: color,
+            <Comma size={isNonMobileScreens ? 60 : 40} />
+            <p
+              style={{
+                color: palette.primary.dark,
+                fontSize: isNonMobileScreens ? "36px" : "24px",
+                fontWeight: 500,
+                width: isNonMobileScreens ? "50vw" : "90vw",
+              }}
+            >
+              {fullQuote
+                ? quotes[quoteIdx].quote
+                : truncate(quotes[quoteIdx].quote, 100, false)}
+              {quotes[quoteIdx].quote.length > 100 && (
+                <span
+                  style={{
+                    color: "#000",
+                    fontSize: isNonMobileScreens ? "24px" : "16px",
+                    cursor: "pointer",
                   }}
-                />
-              </Suspense>
-            </IconButton>
-            <IconButton onClick={handleNext}>
-              <Suspense fallback={<Loader />}>
-                <LazyArrowCircleRightIcon
-                  sx={{
-                    fontSize: "50px",
-                    color: color,
-                  }}
-                />
-              </Suspense>
-            </IconButton>
+                  onClick={() => setFullQuote((prev) => !prev)}
+                >
+                  {fullQuote ? "...Read less" : "...Read more"}
+                </span>
+              )}
+            </p>
+
+            <p
+              style={{
+                fontSize: isNonMobileScreens ? "24px" : "16px",
+                fontWeight: 500,
+              }}
+            >
+              <span>-{quotes[quoteIdx].author}</span>
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <IconButton onClick={handlePrevious}>
+                <Suspense fallback={<Loader />}>
+                  <LazyArrowCircleLeftIcon
+                    sx={{
+                      fontSize: "50px",
+                      color: color,
+                    }}
+                  />
+                </Suspense>
+              </IconButton>
+              <IconButton onClick={handleNext}>
+                <Suspense fallback={<Loader />}>
+                  <LazyArrowCircleRightIcon
+                    sx={{
+                      fontSize: "50px",
+                      color: color,
+                    }}
+                  />
+                </Suspense>
+              </IconButton>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

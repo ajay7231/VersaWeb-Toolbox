@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^20.5.0",
     "@types/react": "^18.2.19",
     "@types/react-dom": "^18.2.7",
     "parcel-bundler": "^1.12.5",

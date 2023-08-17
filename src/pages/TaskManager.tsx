@@ -26,12 +26,6 @@ const TaskManager = () => {
   };
 
   const handleOpen = () => setOpen(true);
-  // const editHandler = (id: string) => {
-  //   const idx = tasks.findIndex((task) => task.id === id);
-  //   setEditData(tasks[idx]);
-  //   setUpdate(true);
-  //   handleOpen();
-  // };
 
   return (
     <Box

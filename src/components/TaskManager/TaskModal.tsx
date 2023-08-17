@@ -34,8 +34,6 @@ export default function TaskModal({
   update,
   data,
 }: TaskModalProps) {
-  // const [open, setOpen] = useState(false);
-  // const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [taskTitle, setTaskTitle] = useState<string>(data ? data.title : "");
   const [selectedValue, setSelectedValue] = useState<Priority>(
@@ -182,7 +180,7 @@ export default function TaskModal({
             onClick={handleSubmit}
             variant="contained"
           >
-            Add Task
+            {data ? "Update" : "Add Task"}
           </Button>
         </Box>
       </Modal>

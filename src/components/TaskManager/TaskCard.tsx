@@ -8,7 +8,7 @@ import {
   capitalize,
   useMediaQuery,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Task, deleteTask } from "../../state";
 import { DeleteSweep, EditNote } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
@@ -50,7 +50,7 @@ const TaskCard = ({ handleProgess, data }: TaskCardProps) => {
   const [progress, setProgress] = useState<number>(0);
   const dispatch = useDispatch();
 
-  const handleEdit = (id: string) => {
+  const handleEdit = () => {
     setEdit(true);
   };
 
@@ -170,7 +170,7 @@ const TaskCard = ({ handleProgess, data }: TaskCardProps) => {
             justifyContent: "center",
           }}
         >
-          <IconButton onClick={() => handleEdit(data.id)} aria-label="edit">
+          <IconButton onClick={() => handleEdit()} aria-label="edit">
             <EditNote
               sx={{
                 color: "primary.main",

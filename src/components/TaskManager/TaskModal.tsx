@@ -20,23 +20,6 @@ import {
 import { useDispatch } from "react-redux";
 import { Close } from "@mui/icons-material";
 
-const style = {
-  position: "absolute",
-  height: "500px",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-evenly",
-  alighItems: "center",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "40vw",
-  bgcolor: "#fff",
-  borderRadius: "20px",
-  boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-  p: 4,
-};
-
 type Priority = "high" | "medium" | "low";
 type TaskModalProps = {
   open: boolean;
@@ -52,7 +35,7 @@ export default function TaskModal({
   data,
 }: TaskModalProps) {
   // const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  // const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [taskTitle, setTaskTitle] = useState<string>(data ? data.title : "");
   const [selectedValue, setSelectedValue] = useState<Priority>(

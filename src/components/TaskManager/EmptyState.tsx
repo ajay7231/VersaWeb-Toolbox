@@ -1,4 +1,3 @@
-import React from "react";
 import { Typography, Button, Box, Stack, useMediaQuery } from "@mui/material";
 
 const EmptyState = ({ handleClick }: { handleClick: () => void }) => {

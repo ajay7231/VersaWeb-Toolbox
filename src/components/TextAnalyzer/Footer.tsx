@@ -1,4 +1,3 @@
-import React from "react";
 import { Grid, useTheme } from "@mui/material";
 
 const Footer = ({

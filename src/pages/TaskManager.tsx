@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button } from "@mui/material";
 import { Task, TaskStatusType, stateType, updateTask } from "../state";

@@ -1,64 +1,27 @@
-# VersaWeb-Toolbox: A Multi-Tool Web App
+# React + TypeScript + Vite
 
-Welcome to the VersaWeb-Toolbox repository! This project houses a versatile and powerful web app that brings together an array of tools designed to enhance your productivity, creativity, and organization.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features
+Currently, two official plugins are available:
 
-- **Text Analyzer:** Dive into the world of text analysis with our intuitive tool. Extract insights, perform sentiment analysis, and gain a deeper understanding of your textual data.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-- **Task Manager:** Streamline your tasks and boost efficiency with our comprehensive task manager. Organize your to-do lists, set priorities, and track your progress effortlessly.
+## Expanding the ESLint configuration
 
-- **Quote Generator:** Ignite your inspiration with our quote generator. Access a curated collection of quotes for motivation, reflection, and sharing on your journey.
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-... and much more!
+- Configure the top-level `parserOptions` property like this:
 
-## Installation
-
-To get the VersaWeb-Toolbox web app up and running locally on your machine, follow these steps:
-
-1. **Clone the Repository:**
-
-```bash
-git clone https://github.com/ajay7231/VersaWeb-Toolbox.git
-cd VersaWeb-Toolbox
+```js
+   parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+   },
 ```
 
-2. **Install Dependencies:**
-
-```bash
-npm install
-```
-
-3. **Start the Development Server:**
-
-```bash
-npm start
-```
-
-4. Open your web browser and navigate to `http://localhost:1234` to access the app.
-
-## Contributing
-
-We welcome contributions from the community! If you'd like to contribute to the project, follow these steps:
-
-1. Fork the repository.
-
-2. Create a new branch for your feature/bug fix.
-
-3. Make your changes and commit them.
-
-4. Push your changes to your forked repository.
-
-5. Create a pull request to this repository's `main` branch.
-
-## Feedback
-
-We'd love to hear your feedback about the VersaWeb-Toolbox project. If you have any suggestions, questions, or issues, please open an issue on this repository.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-Join us in exploring the limitless possibilities of VersaWeb-Toolbox. Experience the synergy of versatility and productivity today!
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

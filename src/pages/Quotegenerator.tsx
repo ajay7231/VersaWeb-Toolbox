@@ -1,4 +1,4 @@
-import React, { useState, useMemo, lazy, Suspense, useEffect } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import {
   Autocomplete,
   IconButton,
@@ -70,18 +70,21 @@ const Quotegenerator: React.FC = () => {
     setRandomColor();
   };
 
+  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
+
   useEffect(() => {
+    console.log("Trigger changed");
     setFetching(true);
     axios
-      .get(`${process.env.REACT_APP_NINJA_URL}quotes?category=${category}`, {
+      .get(`${import.meta.env.VITE_NINJA_URL}quotes?category=${category}`, {
         headers: {
-          "X-Api-Key": process.env.REACT_APP_NINJA_API_KEY,
+          "X-Api-Key": import.meta.env.VITE_NINJA_API_KEY,
         },
       })
       .then((response) => {
         setQuoteIdx((prev) => prev + 1);
         setQuotes((prev) => [...prev, response.data[0]]);
-        console.log(quotes);
+        // console.log(quotes);
       })
       .catch((error) => {
         if (error.response) {
@@ -96,9 +99,13 @@ const Quotegenerator: React.FC = () => {
   }, [trigger]);
 
   useEffect(() => {
-    setQuoteIdx(-1);
-    setQuotes([]);
-    setTrigger((prev) => !prev);
+    console.log("Category changed");
+    if (isFirstRender) setIsFirstRender(false);
+    else {
+      setQuoteIdx(-1);
+      setQuotes([]);
+      setTrigger((prev) => !prev);
+    }
   }, [category]);
 
   if (fetching) return <Loader />;
@@ -131,7 +138,7 @@ const Quotegenerator: React.FC = () => {
             freeSolo
             id="combo-box-demo"
             options={categories}
-            onChange={(event, value) => value && setCategory(value)}
+            onChange={(_, value) => value && setCategory(value)}
             sx={{
               width: 300,
               marginTop: "20px",

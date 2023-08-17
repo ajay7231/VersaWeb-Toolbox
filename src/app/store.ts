@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import themeReducer from "../state";
 import {
   persistReducer,
@@ -13,10 +13,6 @@ import storage from "redux-persist/lib/storage";
 // import { quotesApi } from "../api/quotes";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
 
-const combinedReducers = combineReducers({
-  theme: themeReducer,
-  // [quotesApi.reducerPath]: quotesApi.reducer,
-});
 const persistConfig = {
   key: "root",
   storage,

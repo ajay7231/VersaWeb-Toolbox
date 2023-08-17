@@ -1,23 +1,13 @@
 {
-  "name": "react_challenges",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "versa-toobox",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "parcel public/index.html --open",
-    "build": "parcel build public/index.html",
-    "serve": "parcel serve dist/index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^20.5.0",
-    "@types/react": "^18.2.19",
-    "@types/react-dom": "^18.2.7",
-    "parcel-bundler": "^1.12.5",
-    "typescript": "^5.1.6"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -27,12 +17,23 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@tanstack/react-query": "^4.32.6",
     "axios": "^1.4.0",
-    "components": "^0.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-query": "^3.39.3",
     "react-redux": "^8.1.2",
     "react-router-dom": "^6.14.2",
     "redux-persist": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
   }
 }
